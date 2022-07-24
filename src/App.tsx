@@ -3,6 +3,7 @@ import './App.css';
 import {TaskType, Todolist} from './Todolist';
 import {v1} from 'uuid';
 import {AddItemForm} from "./AddItemForm/AddItemForm";
+import {log} from "util";
 
 export type FilterValuesType = "all" | "active" | "completed";
 type TodolistType = {
@@ -100,11 +101,12 @@ function App() {
         //     updateTask.title = newTitle
         // }
         // setTasks({...tasks})
-        setTasks({...tasks,[idTodolist]:tasks[idTodolist].map(t => t.id === id? {...t,title:newTitle}:t)})
+        setTasks({...tasks, [idTodolist]: tasks[idTodolist].map(t => t.id === id ? {...t, title: newTitle} : t)})
     }
 
-    const ChangeNameTodolist = (newTitle: string, idTodolist: string) => {
-        setTodolists(todolists.map(tl => tl.id === idTodolist? tl.title = newTitle:tl))
+    const changeNameTodolist = (idTodolist: string, newTitle: string,) => {
+
+        setTodolists(todolists.map(tl => tl.id === idTodolist ? {...tl, title: newTitle} : tl))
     }
 
     return (
@@ -117,13 +119,14 @@ function App() {
                     let tasksForTodolist = allTodolistTasks;
 
                     if (tl.filter === "active") {
-                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone === false);
+                        tasksForTodolist = allTodolistTasks.filter(t => !t.isDone);
                     }
                     if (tl.filter === "completed") {
-                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone === true);
+                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone);
                     }
 
                     return <Todolist
+                        changeNameTodolist={changeNameTodolist}
                         ChangeTitle={ChangeTitle}
                         key={tl.id}
                         id={tl.id}
